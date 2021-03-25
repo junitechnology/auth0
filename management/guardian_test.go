@@ -203,4 +203,25 @@ func TestGuardian(t *testing.T) {
 			})
 		})
 	})
+
+	t.Run("Enrollment", func(t *testing.T) {
+		t.Run("CreateTicket", func(t *testing.T) {
+			u := &User{
+				Connection: auth0.String("Username-Password-Authentication"),
+				Email:      auth0.String("chuck@chucknorris.com"),
+				Password:   auth0.String("I have a password and its a secret"),
+			}
+			if err := m.User.Create(u); err != nil {
+				t.Fatal(err)
+			}
+			userID := u.GetID()
+			t.Cleanup(func() { m.User.Delete(userID) })
+
+			ticket, err := m.Guardian.Enrollment.CreateTicket(userID, false, "")
+			if err != nil {
+				t.Error(err)
+			}
+			t.Logf("%v", ticket)
+		})
+	})
 }
