@@ -109,7 +109,7 @@ type User struct {
 	// enrolled. Read only, cannot be modified.
 	Multifactor []string `json:"multifactor,omitempty"`
 
-	MultfactorLastModified *time.Time `json:"multifactor_last_modified,omitempty"`
+	MultifactorLastModified *time.Time `json:"multifactor_last_modified,omitempty"`
 }
 
 // UnmarshalJSON is a custom deserializer for the User type.

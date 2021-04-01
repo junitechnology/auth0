@@ -4664,12 +4664,12 @@ func (u *User) GetLoginsCount() int64 {
 	return *u.LoginsCount
 }
 
-// GetMultfactorLastModified returns the MultfactorLastModified field if it's non-nil, zero value otherwise.
-func (u *User) GetMultfactorLastModified() time.Time {
-	if u == nil || u.MultfactorLastModified == nil {
+// GetMultifactorLastModified returns the MultifactorLastModified field if it's non-nil, zero value otherwise.
+func (u *User) GetMultifactorLastModified() time.Time {
+	if u == nil || u.MultifactorLastModified == nil {
 		return time.Time{}
 	}
-	return *u.MultfactorLastModified
+	return *u.MultifactorLastModified
 }
 
 // GetName returns the Name field if it's non-nil, zero value otherwise.
