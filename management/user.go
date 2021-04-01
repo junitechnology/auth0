@@ -104,6 +104,10 @@ type User struct {
 
 	// Total number of logins this user has performed. Read only, cannot be modified.
 	LoginsCount *int64 `json:"logins_count,omitempty"`
+
+	// List of multi-factor authentication providers with which this user has
+	// enrolled. Read only, cannot be modified.
+	Multifactor []string `json:"multifactor,omitempty"`
 }
 
 // UnmarshalJSON is a custom deserializer for the User type.
