@@ -49,6 +49,7 @@ fmt.Printf("Created client %s\n", c.ClientID)
 
 The following Auth0 resources are supported:
 
+- [x] [Actions](https://auth0.com/docs/api/management/v2/#!/Actions/get_actions)
 - [x] [Branding](https://auth0.com/docs/api/management/v2/#!/Branding/get_branding)
 - [x] [Clients (Applications)](https://auth0.com/docs/api/management/v2#!/Clients/get_clients)
 - [x] [Client Grants](https://auth0.com/docs/api/management/v2#!/Client_Grants/get_client_grants)
@@ -60,6 +61,7 @@ The following Auth0 resources are supported:
 - [x] [Hook Secrets](https://auth0.com/docs/api/management/v2/#!/Hooks/get_secrets)
 - [x] [Log Streams](https://auth0.com/docs/api/management/v2#!/Log_Streams/get_log_streams)
 - [x] [Logs](https://auth0.com/docs/api/management/v2#!/Logs/get_logs)
+- [x] [Organizations](https://auth0.com/docs/api/management/v2#!/Organizations/get_organizations)
 - [x] [Prompts](https://auth0.com/docs/api/management/v2#!/Prompts/get_prompts)
 - [x] [Resource Servers (APIs)](https://auth0.com/docs/api/management/v2#!/Resource_Servers/get_resource_servers)
 - [x] [Roles](https://auth0.com/docs/api/management/v2#!/Roles)
@@ -75,9 +77,20 @@ The following Auth0 resources are supported:
 - [x] [Jobs](https://auth0.com/docs/api/management/v2#!/Jobs/get_jobs_by_id)
 - [x] [Stats](https://auth0.com/docs/api/management/v2#!/Stats/get_active_users)
 - [x] [Tenants](https://auth0.com/docs/api/management/v2#!/Tenants/get_settings)
-- [ ] [Anomaly](https://auth0.com/docs/api/management/v2#!/Anomaly/get_ips_by_id)
+- [X] [Anomaly](https://auth0.com/docs/api/management/v2#!/Anomaly/get_ips_by_id)
 - [x] [Tickets](https://auth0.com/docs/api/management/v2#!/Tickets/post_email_verification)
 - [x] [Signing Keys](https://auth0.com/docs/api/management/v2#!/Keys/get_signing_keys)
+
+### Tests
+
+The tests must run against an Auth0 tenant. They also need an [M2M app](https://auth0.com/docs/applications/set-up-an-application/register-machine-to-machine-applications) in that tenant that has been authorized to call the Management API. You can easily set one of these up by creating an [API Explorer Application](https://auth0.com/docs/tokens/management-api-access-tokens/create-and-authorize-a-machine-to-machine-application) in your tenant.
+
+Then simply create a local `.env` file with the following settings:
+
+* `AUTH0_DOMAIN`: The **Domain** of the M2M app
+* `AUTH0_CLIENT_ID`: The **Client ID** of the M2M app
+* `AUTH0_CLIENT_SECRET`: The **Client Secret** of the M2M app
+* `AUTH0_DEBUG`: Set to `true` to call the Management API in debug mode, which dumps the HTTP requests and responses to the output
 
 ## What is Auth0?
 
