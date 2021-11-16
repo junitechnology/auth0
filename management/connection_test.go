@@ -153,6 +153,7 @@ func TestConnection(t *testing.T) {
 		t.Logf("%v\n", cs)
 	})
 }
+
 func TestConnectionOptions(t *testing.T) {
 
 	t.Run("GoogleOAuth2", func(t *testing.T) {
@@ -217,6 +218,72 @@ func TestConnectionOptions(t *testing.T) {
 			log.Fatal(err)
 		}
 		o, ok = c.Options.(*ConnectionOptionsGoogleOAuth2)
+		expect.Expect(t, o.GetNonPersistentAttrs(), []string{""})
+
+		t.Logf("%s\n", g)
+	})
+
+	t.Run("GoogleApps", func(t *testing.T) {
+		g := &Connection{
+			Name:     auth0.Stringf("Test-Connection-%d", time.Now().Unix()),
+			Strategy: auth0.String("google-apps"),
+			Options: &ConnectionOptionsGoogleApps{
+				Domain:          auth0.String("example.com"),
+				TenantDomain:    auth0.String("example.com"),
+				BasicProfile:    auth0.Bool(true),
+				ExtendedProfile: auth0.Bool(true),
+				Groups:          auth0.Bool(true),
+			},
+		}
+
+		defer func() {
+			m.Connection.Delete(g.GetID())
+			assertDeleted(t, g)
+
+		}()
+
+		err := m.Connection.Create(g)
+		if err != nil {
+			t.Fatal(err)
+		}
+		c, err := m.Connection.Read(g.GetID())
+		if err != nil {
+			t.Fatal(err)
+		}
+		o, ok := c.Options.(*ConnectionOptionsGoogleApps)
+		if !ok {
+			t.Fatalf("unexpected type %T", o)
+		}
+		expect.Expect(t, o.GetBasicProfile(), true)
+		expect.Expect(t, o.GetExtendedProfile(), true)
+		expect.Expect(t, o.GetGroups(), true)
+		expect.Expect(t, o.GetAdmin(), false)
+		expect.Expect(t, o.Scopes(), []string{"basic_profile", "ext_profile", "ext_groups"})
+
+		o.NonPersistentAttrs = &[]string{"gender", "ethnicity", "favorite_color"}
+		err = m.Connection.Update(g.GetID(), &Connection{
+			Options: o,
+		})
+		if err != nil {
+			t.Fatal(err)
+		}
+		c, _ = m.Connection.Read(g.GetID())
+		o, ok = c.Options.(*ConnectionOptionsGoogleApps)
+		expect.Expect(t, o.GetNonPersistentAttrs(), []string{"gender", "ethnicity", "favorite_color"})
+
+		o.NonPersistentAttrs = &[]string{""}
+		err = m.Connection.Update(g.GetID(), &Connection{
+			Options: o,
+		})
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		c, err = m.Connection.Read(g.GetID())
+		if err != nil {
+			log.Fatal(err)
+		}
+		o, ok = c.Options.(*ConnectionOptionsGoogleApps)
 		expect.Expect(t, o.GetNonPersistentAttrs(), []string{""})
 
 		t.Logf("%s\n", g)
@@ -379,6 +446,70 @@ func TestConnectionOptions(t *testing.T) {
 		expect.Expect(t, o.GetTwilioSID(), "abc132asdfasdf56")
 		expect.Expect(t, o.GetTwilioToken(), "234127asdfsada23")
 		expect.Expect(t, o.GetMessagingServiceSID(), "273248090982390423")
+
+		t.Logf("%s\n", s)
+	})
+
+	t.Run("CustomSMS", func(t *testing.T) {
+
+		s := &Connection{
+			Name:     auth0.Stringf("Test-Connection-Custom-SMS-%d", time.Now().Unix()),
+			Strategy: auth0.String("sms"),
+			Options: &ConnectionOptionsSMS{
+				From:     auth0.String("+17777777777"),
+				Template: auth0.String("Your verification code is { code }}"),
+				Syntax:   auth0.String("liquid"),
+				OTP: &ConnectionOptionsOTP{
+					TimeStep: auth0.Int(110),
+					Length:   auth0.Int(5),
+				},
+				BruteForceProtection: auth0.Bool(true),
+				DisableSignup:        auth0.Bool(false),
+				Name:                 auth0.String("Test-Connection-Custom-SMS"),
+				Provider:             auth0.String("sms_gateway"),
+				GatewayUrl:           auth0.String("https://test.com/sms-gateway"),
+				GatewayAuthentication: &ConnectionGatewayAuthentication{
+					Method:              auth0.String("bearer"),
+					Subject:             auth0.String("test.us.auth0.com:sms"),
+					Audience:            auth0.String("test.com/sms-gateway"),
+					Secret:              auth0.String("my-secret"),
+					SecretBase64Encoded: auth0.Bool(false),
+				},
+				ForwardRequestInfo: auth0.Bool(true),
+			},
+		}
+
+		defer func() {
+			m.Connection.Delete(s.GetID())
+			assertDeleted(t, s)
+		}()
+
+		err := m.Connection.Create(s)
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		o, ok := s.Options.(*ConnectionOptionsSMS)
+		if !ok {
+			t.Fatalf("unexpected type %T", o)
+		}
+
+		expect.Expect(t, o.GetTemplate(), "Your verification code is { code }}")
+		expect.Expect(t, o.GetFrom(), "+17777777777")
+		expect.Expect(t, o.GetSyntax(), "liquid")
+		expect.Expect(t, o.GetOTP().GetTimeStep(), 110)
+		expect.Expect(t, o.GetOTP().GetLength(), 5)
+		expect.Expect(t, o.GetBruteForceProtection(), true)
+		expect.Expect(t, o.GetDisableSignup(), true)
+		expect.Expect(t, o.GetName(), "Test-Connection-Custom-SMS")
+		expect.Expect(t, o.GetProvider(), "sms_gateway")
+		expect.Expect(t, o.GetGatewayUrl(), "https://test.com/sms-gateway")
+		expect.Expect(t, o.GetGatewayAuthentication().GetMethod(), "bearer")
+		expect.Expect(t, o.GetGatewayAuthentication().GetSubject(), "test.us.auth0.com:sms")
+		expect.Expect(t, o.GetGatewayAuthentication().GetAudience(), "test.com/sms-gateway")
+		expect.Expect(t, o.GetGatewayAuthentication().GetSecret(), "my-secret")
+		expect.Expect(t, o.GetGatewayAuthentication().GetSecretBase64Encoded(), false)
+		expect.Expect(t, o.GetForwardRequestInfo(), true)
 
 		t.Logf("%s\n", s)
 	})
