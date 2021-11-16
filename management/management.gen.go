@@ -54,6 +54,14 @@ func (a *Action) GetName() string {
 	return *a.Name
 }
 
+// GetRuntime returns the Runtime field if it's non-nil, zero value otherwise.
+func (a *Action) GetRuntime() string {
+	if a == nil || a.Runtime == nil {
+		return ""
+	}
+	return *a.Runtime
+}
+
 // GetStatus returns the Status field if it's non-nil, zero value otherwise.
 func (a *Action) GetStatus() string {
 	if a == nil || a.Status == nil {
@@ -252,14 +260,6 @@ func (a *ActionExecutionResult) GetEndedAt() time.Time {
 	return *a.EndedAt
 }
 
-// GetError returns the Error field if it's non-nil, zero value otherwise.
-func (a *ActionExecutionResult) GetError() map[string]string {
-	if a == nil || a.Error == nil {
-		return map[string]string{}
-	}
-	return *a.Error
-}
-
 // GetStartedAt returns the StartedAt field if it's non-nil, zero value otherwise.
 func (a *ActionExecutionResult) GetStartedAt() time.Time {
 	if a == nil || a.StartedAt == nil {
@@ -304,19 +304,6 @@ func (a *ActionSecret) GetValue() string {
 
 // String returns a string representation of ActionSecret.
 func (a *ActionSecret) String() string {
-	return Stringify(a)
-}
-
-// GetPayload returns the Payload field.
-func (a *ActionTestRequest) GetPayload() *ActionTestPayload {
-	if a == nil {
-		return nil
-	}
-	return a.Payload
-}
-
-// String returns a string representation of ActionTestRequest.
-func (a *ActionTestRequest) String() string {
 	return Stringify(a)
 }
 
@@ -972,6 +959,51 @@ func (c *Connection) GetStrategy() string {
 
 // String returns a string representation of Connection.
 func (c *Connection) String() string {
+	return Stringify(c)
+}
+
+// GetAudience returns the Audience field if it's non-nil, zero value otherwise.
+func (c *ConnectionGatewayAuthentication) GetAudience() string {
+	if c == nil || c.Audience == nil {
+		return ""
+	}
+	return *c.Audience
+}
+
+// GetMethod returns the Method field if it's non-nil, zero value otherwise.
+func (c *ConnectionGatewayAuthentication) GetMethod() string {
+	if c == nil || c.Method == nil {
+		return ""
+	}
+	return *c.Method
+}
+
+// GetSecret returns the Secret field if it's non-nil, zero value otherwise.
+func (c *ConnectionGatewayAuthentication) GetSecret() string {
+	if c == nil || c.Secret == nil {
+		return ""
+	}
+	return *c.Secret
+}
+
+// GetSecretBase64Encoded returns the SecretBase64Encoded field if it's non-nil, zero value otherwise.
+func (c *ConnectionGatewayAuthentication) GetSecretBase64Encoded() bool {
+	if c == nil || c.SecretBase64Encoded == nil {
+		return false
+	}
+	return *c.SecretBase64Encoded
+}
+
+// GetSubject returns the Subject field if it's non-nil, zero value otherwise.
+func (c *ConnectionGatewayAuthentication) GetSubject() string {
+	if c == nil || c.Subject == nil {
+		return ""
+	}
+	return *c.Subject
+}
+
+// String returns a string representation of ConnectionGatewayAuthentication.
+func (c *ConnectionGatewayAuthentication) String() string {
 	return Stringify(c)
 }
 
@@ -2225,6 +2257,14 @@ func (c *ConnectionOptionsGoogleApps) GetSetUserAttributes() string {
 	return *c.SetUserAttributes
 }
 
+// GetTenantDomain returns the TenantDomain field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsGoogleApps) GetTenantDomain() string {
+	if c == nil || c.TenantDomain == nil {
+		return ""
+	}
+	return *c.TenantDomain
+}
+
 // String returns a string representation of ConnectionOptionsGoogleApps.
 func (c *ConnectionOptionsGoogleApps) String() string {
 	return Stringify(c)
@@ -2956,6 +2996,14 @@ func (c *ConnectionOptionsSAML) GetSigningCert() string {
 	return *c.SigningCert
 }
 
+// GetSigningKey returns the SigningKey field.
+func (c *ConnectionOptionsSAML) GetSigningKey() *ConnectionOptionsSAMLSigningKey {
+	if c == nil {
+		return nil
+	}
+	return c.SigningKey
+}
+
 // GetSignOutEndpoint returns the SignOutEndpoint field if it's non-nil, zero value otherwise.
 func (c *ConnectionOptionsSAML) GetSignOutEndpoint() string {
 	if c == nil || c.SignOutEndpoint == nil {
@@ -3046,6 +3094,27 @@ func (c *ConnectionOptionsSAMLIdpInitiated) String() string {
 	return Stringify(c)
 }
 
+// GetCert returns the Cert field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAMLSigningKey) GetCert() string {
+	if c == nil || c.Cert == nil {
+		return ""
+	}
+	return *c.Cert
+}
+
+// GetKey returns the Key field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSAMLSigningKey) GetKey() string {
+	if c == nil || c.Key == nil {
+		return ""
+	}
+	return *c.Key
+}
+
+// String returns a string representation of ConnectionOptionsSAMLSigningKey.
+func (c *ConnectionOptionsSAMLSigningKey) String() string {
+	return Stringify(c)
+}
+
 // GetBruteForceProtection returns the BruteForceProtection field if it's non-nil, zero value otherwise.
 func (c *ConnectionOptionsSMS) GetBruteForceProtection() bool {
 	if c == nil || c.BruteForceProtection == nil {
@@ -3062,12 +3131,36 @@ func (c *ConnectionOptionsSMS) GetDisableSignup() bool {
 	return *c.DisableSignup
 }
 
+// GetForwardRequestInfo returns the ForwardRequestInfo field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetForwardRequestInfo() bool {
+	if c == nil || c.ForwardRequestInfo == nil {
+		return false
+	}
+	return *c.ForwardRequestInfo
+}
+
 // GetFrom returns the From field if it's non-nil, zero value otherwise.
 func (c *ConnectionOptionsSMS) GetFrom() string {
 	if c == nil || c.From == nil {
 		return ""
 	}
 	return *c.From
+}
+
+// GetGatewayAuthentication returns the GatewayAuthentication field.
+func (c *ConnectionOptionsSMS) GetGatewayAuthentication() *ConnectionGatewayAuthentication {
+	if c == nil {
+		return nil
+	}
+	return c.GatewayAuthentication
+}
+
+// GetGatewayUrl returns the GatewayUrl field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetGatewayUrl() string {
+	if c == nil || c.GatewayUrl == nil {
+		return ""
+	}
+	return *c.GatewayUrl
 }
 
 // GetMessagingServiceSID returns the MessagingServiceSID field if it's non-nil, zero value otherwise.
@@ -3092,6 +3185,14 @@ func (c *ConnectionOptionsSMS) GetOTP() *ConnectionOptionsOTP {
 		return nil
 	}
 	return c.OTP
+}
+
+// GetProvider returns the Provider field if it's non-nil, zero value otherwise.
+func (c *ConnectionOptionsSMS) GetProvider() string {
+	if c == nil || c.Provider == nil {
+		return ""
+	}
+	return *c.Provider
 }
 
 // GetSyntax returns the Syntax field if it's non-nil, zero value otherwise.
@@ -4434,6 +4535,16 @@ func (m *MultiFactorSMSTemplate) String() string {
 	return Stringify(m)
 }
 
+// String returns a string representation of MultiFactorWebAuthnPlatform.
+func (m *MultiFactorWebAuthnPlatform) String() string {
+	return Stringify(m)
+}
+
+// String returns a string representation of MultiFactorWebAuthnRoaming.
+func (m *MultiFactorWebAuthnRoaming) String() string {
+	return Stringify(m)
+}
+
 // GetBranding returns the Branding field.
 func (o *Organization) GetBranding() *OrganizationBranding {
 	if o == nil {
@@ -4471,12 +4582,12 @@ func (o *Organization) String() string {
 	return Stringify(o)
 }
 
-// GetLogoUrl returns the LogoUrl field if it's non-nil, zero value otherwise.
-func (o *OrganizationBranding) GetLogoUrl() string {
-	if o == nil || o.LogoUrl == nil {
+// GetLogoURL returns the LogoURL field if it's non-nil, zero value otherwise.
+func (o *OrganizationBranding) GetLogoURL() string {
+	if o == nil || o.LogoURL == nil {
 		return ""
 	}
-	return *o.LogoUrl
+	return *o.LogoURL
 }
 
 // String returns a string representation of OrganizationBranding.
@@ -4579,12 +4690,12 @@ func (o *OrganizationInvitation) GetID() string {
 	return *o.ID
 }
 
-// GetInvitationUrl returns the InvitationUrl field if it's non-nil, zero value otherwise.
-func (o *OrganizationInvitation) GetInvitationUrl() string {
-	if o == nil || o.InvitationUrl == nil {
+// GetInvitationURL returns the InvitationURL field if it's non-nil, zero value otherwise.
+func (o *OrganizationInvitation) GetInvitationURL() string {
+	if o == nil || o.InvitationURL == nil {
 		return ""
 	}
-	return *o.InvitationUrl
+	return *o.InvitationURL
 }
 
 // GetInvitee returns the Invitee field.
